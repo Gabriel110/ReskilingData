@@ -8,6 +8,9 @@ Formação Data Mesh proporcionada pela zup
 - terraform plan -destroy
 - terraform apply -destroy --auto-approve 
 
+## Ok
+- http://localhost:4566/restapis/API_ID/dev/_user_request_/api
+
 ## Comando aws
   - aws apigateway get-api-keys --endpoint-url=http://localhost:4566 --region us-west-1
   - aws lambda --endpoint http://localhost:4566 get-function --function-name lambda-process
