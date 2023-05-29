@@ -1,11 +1,13 @@
 import logging
 from dynamo import Dynamo
+import json
 
 LOGGER = logging.getLogger()
 LOGGER.setLevel(logging.INFO)
 
 def handler(event, context):
-  LOGGER.info(event)
-  json = Dynamo.generareJson(event['name'],event['cpf'], event['birth'])
-  Dynamo().putItem('PESSOA',json)
+  body = json.loads(event['body'])
+  LOGGER.info(body)
+  dynamoJson = Dynamo.generareJson(body['name'],body['cpf'], body['birth'])
+  Dynamo().putItem('PESSOA',dynamoJson)
   return event
