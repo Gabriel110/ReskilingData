@@ -9,6 +9,7 @@ Formação Data Mesh proporcionada pela zup
 - terraform apply -destroy --auto-approve 
 
 ## Comando aws
+  - aws apigateway get-api-keys --endpoint-url=http://localhost:4566 --region us-west-1
   - aws lambda --endpoint http://localhost:4566 get-function --function-name lambda-process
   - aws lambda invoke --function-name gabriel --endpoint-url=http://localhost:4566 --payload 'eyJxdWFudGl0eSI6IDJ9' output.txt
   - aws --endpoint-url=http://localhost:4566 lambda list-functions
