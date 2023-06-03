@@ -1,7 +1,7 @@
 resource "random_pet" "bucket" {}
 
 resource "aws_s3_bucket" "bucket" {
-  bucket = "${var.bucket_name}-${random_pet.bucket.id}"
+  bucket = "${var.bucket_name}"
 }
 
 

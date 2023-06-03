@@ -12,7 +12,7 @@ variable "region" {
 variable "bucket_name" {
   type        = string
   description = ""
-  default     = "gabriel-bucket"
+  default     = "gabriel-bucket-122345"
 }
 
 
