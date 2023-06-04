@@ -1,3 +1,5 @@
+### LAMBDA
+
 data "aws_iam_policy_document" "role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -18,6 +20,7 @@ data "aws_iam_policy_document" "lambda_action" {
     actions = [
       "s3:*",
       "sns:*",
+      "secretsmanager:*"
     ]
   }
   statement {
@@ -60,4 +63,33 @@ resource "aws_iam_policy" "s3" {
 resource "aws_iam_role_policy_attachment" "s3-execute" {
   policy_arn = aws_iam_policy.s3.arn
   role       = aws_iam_role.lambda-assume-role.name
+}
+
+
+###### SECRETS MANGER
+
+data "aws_iam_policy_document" "secret_policy" {
+  statement {
+    sid    = "EnableAnotherAWSAccountToReadTheSecret"
+    effect = "Allow"
+
+    principals {
+      type        = "AWS"
+      identifiers = ["*"]
+    }
+
+    actions   = ["secretsmanager:GetSecretValue"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_secretsmanager_secret_policy" "role" {
+  secret_arn = aws_secretsmanager_secret.example.arn
+  policy     = data.aws_iam_policy_document.secret_policy.json
+}
+
+
+resource "aws_secretsmanager_secret_policy" "role_2" {
+  secret_arn = "arn:aws:secretsmanager:us-east-1:797844572213:secret:rds!cluster-9cc5f5f8-2625-424c-8ee3-e64cb5ef504e-CpOltj"
+  policy     = data.aws_iam_policy_document.secret_policy.json
 }

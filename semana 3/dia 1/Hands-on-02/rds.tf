@@ -64,6 +64,7 @@ module "aurora_postgresql_v2" {
   source = "terraform-aws-modules/rds-aurora/aws"
 
   name              = "gabrielpostgresqlv2"
+  database_name     = "gabrielpostgresqlv2" 
   engine            = data.aws_rds_engine_version.postgresql.engine
   engine_mode       = "provisioned"
   engine_version    = data.aws_rds_engine_version.postgresql.version

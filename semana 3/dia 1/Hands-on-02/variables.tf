@@ -26,3 +26,10 @@ variable "vpc_name" {
   description = ""
   default     = "vpc-zup-datadivision-training-dev"
 }
+
+
+variable "secrets_name" {
+  type        = string
+  description = ""
+  default     = "my-secrets"
+}
