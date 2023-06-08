@@ -1,58 +1,59 @@
-resource "aws_iam_role" "glue" {
-  name               = "AWSGlueServiceRoleDefault"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": "glue.amazonaws.com"
-      },
-      "Effect": "Allow",
-      "Sid": ""
+###GLUE PERMISSION
+data "aws_iam_policy_document" "glue_policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type = "Service"
+      identifiers = [ "glue.amazonaws.com" ]
     }
-  ]
+  }
 }
-EOF
+
+data "aws_iam_policy_document" "glue_action" {
+  statement {
+    sid       = "AllowS3AndGLUEActions"
+    effect    = "Allow"
+    resources = [
+      "arn:aws:s3:::anime-bucket-122334/*"
+    ]
+
+    actions = [
+      "s3:*",
+      "glue:*",
+      "logs:*"
+    ]
+  }
+}
+
+resource "aws_iam_role" "glue_role" {
+  name = "glue-role"
+  assume_role_policy = data.aws_iam_policy_document.glue_policy.json
+}
+
+resource "aws_iam_policy" "glue_policy" {
+  name = "glue-execute-policy"
+  policy = data.aws_iam_policy_document.glue_action.json
 }
 
 resource "aws_iam_role_policy_attachment" "glue_service" {
-  role       = aws_iam_role.glue.id
+  role       = aws_iam_role.glue_role.name
+  policy_arn = aws_iam_policy.glue_policy.arn
+}
+
+resource "aws_iam_role_policy_attachment" "glue_service_role" {
+  role       = aws_iam_role.glue_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSGlueServiceRole"
 }
 
-## If you don't already have a policy, uncomment this section
-resource "aws_iam_role_policy" "my_s3_policy" {
-  name   = "my_s3_policy"
-  role   = aws_iam_role.glue.id
-  policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "glue:*",
-        "s3:*",
-        "ec2:*",
-        "iam:*",
-        "lakeformation:*",
-        "cloudwatch:*"
-      ],
-      "Resource": [
-        "arn:aws:s3:::anime-bucket-122334",
-        "arn:aws:s3:::anime-bucket-122334/*"
-      ]
-    }
-  ]
-}
-EOF
+resource "aws_iam_role_policy_attachment" "glue_full_console_access" {
+  role       = aws_iam_role.glue_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSGlueConsoleFullAccess"
 }
 
 
-resource "aws_iam_role_policy" "glue_service_s3" {
-  name   = "glue_service_s3"
-  role   = aws_iam_role.glue.id
-  policy = aws_iam_role_policy.my_s3_policy.policy
+###S3 Permitions
+
+resource "aws_iam_role_policy_attachment" "amazon_s3_full_access" {
+  role       = aws_iam_role.glue_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }

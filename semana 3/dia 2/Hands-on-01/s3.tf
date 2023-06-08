@@ -2,6 +2,7 @@ resource "random_pet" "bucket" {}
 
 resource "aws_s3_bucket" "bucket" {
   bucket = var.bucket_name
+  force_destroy = true
 }
 
 resource "aws_s3_object" "anime" {
@@ -19,6 +20,17 @@ resource "aws_s3_object" "rating" {
   source       = local.rating_file_path
   etag         = filemd5(local.rating_file_path)
 }
+
+
+resource "aws_s3_object" "spark" {
+  bucket       = aws_s3_bucket.bucket.id
+  key          = "script/spark/processamento.py"
+  content_type = "text/markdown; charset=UTF-8"
+  source       = local.script_file_path
+  etag         = filemd5(local.script_file_path)
+}
+
+
 
 resource "aws_s3_object" "processed" {
   bucket       = aws_s3_bucket.bucket.id
