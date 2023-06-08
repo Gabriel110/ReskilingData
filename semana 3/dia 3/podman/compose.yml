@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  nginx:
+    image: "docker.io/nginx"
+    container_name: mynginx2
+    ports:
+      - "80:80"
+    networks:
+      - podman-network
+
+networks:
+  podman-network:
+    driver: bridge
