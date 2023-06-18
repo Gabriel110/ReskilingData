@@ -9,16 +9,16 @@ variable "bucket_name" {
 }
 
 variable "glue_name_crawler" {
-  type = string
+  type    = string
   default = "glue-crawler-anime"
 }
 
 variable "glue_name_database" {
-  type = string
+  type    = string
   default = "glue-database-animes"
 }
 
 variable "glue_name_job" {
-  type = string
+  type    = string
   default = "glue-job-anime"
 }

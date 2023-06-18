@@ -3,16 +3,16 @@ data "aws_iam_policy_document" "glue_policy" {
   statement {
     actions = ["sts:AssumeRole"]
     principals {
-      type = "Service"
-      identifiers = [ "glue.amazonaws.com" ]
+      type        = "Service"
+      identifiers = ["glue.amazonaws.com"]
     }
   }
 }
 
 data "aws_iam_policy_document" "glue_action" {
   statement {
-    sid       = "AllowS3AndGLUEActions"
-    effect    = "Allow"
+    sid    = "AllowS3AndGLUEActions"
+    effect = "Allow"
     resources = [
       "arn:aws:s3:::anime-bucket-122334/*"
     ]
@@ -26,12 +26,12 @@ data "aws_iam_policy_document" "glue_action" {
 }
 
 resource "aws_iam_role" "glue_role" {
-  name = "glue-role"
+  name               = "glue-role"
   assume_role_policy = data.aws_iam_policy_document.glue_policy.json
 }
 
 resource "aws_iam_policy" "glue_policy" {
-  name = "glue-execute-policy"
+  name   = "glue-execute-policy"
   policy = data.aws_iam_policy_document.glue_action.json
 }
 
