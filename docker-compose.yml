@@ -5,6 +5,7 @@ services:
     image: localstack/localstack:latest
     environment:
       - AWS_DEFAULT_REGION=us-east-1
+      - LAMBDA_REMOTE_DOCKER=true
       - EDGE_PORT=4566
       - DEBUG=1
       - SERVICES=lambda,s3,cloudformation,sts,dynamodb,iam,sns,sqs,apigateway,cloudwatch
@@ -18,7 +19,26 @@ services:
     command: "aws configure set aws_access_key_id test
       &&  aws configure set aws_secret_access_key test
       && aws configure set region us-east-1"
-      
+
+  redis:
+    image: redis
+    command: redis-server --requirepass Redis2019!
+    ports:
+      - "6379:6379"
+    networks:
+      - local
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    ports:
+      - '8001:8001'
+    networks:
+      - local
+
+networks:
+  local:
+    driver: bridge
+
   # wiremock:
   #   image: wiremock/wiremock:2.32.0
   #   container_name: wiremock
